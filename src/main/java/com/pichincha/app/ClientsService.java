@@ -1,12 +1,12 @@
 package com.pichincha.app;
 
 import com.pichincha.app.mapper.ClientMapper;
-import com.pichincha.domain.entities.Client;
+import com.pichincha.domain.entities.Account;
 import com.pichincha.domain.port.db.ClientsPortRepository;
 import com.pichincha.infra.adapter.db.entites.ClientsDto;
-import com.pichincha.infra.api.router.controller.dto.response.client.ClientDto;
-import com.pichincha.infra.api.router.controller.error.exception.ClientException;
-import com.pichincha.infra.api.router.facade.ClientsFacade;
+import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
+import com.pichincha.infra.api.router.controller.error.exception.AccountException;
+import com.pichincha.infra.api.router.facade.AccountsFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -18,45 +18,45 @@ import static com.pichincha.app.ServiceConsts.*;
 
 @Slf4j
 @Service
-public class ClientsService implements ClientsFacade {
+public class ClientsService implements AccountsFacade {
 
     @Autowired
     private ClientsPortRepository clientsPortRepository;
 
-    public ClientDto createClient(Client clientToSave) throws ClientException {
+    public AccountDto createClient(Account accountToSave) throws AccountException {
         try{
-            Client client = clientsPortRepository.save(
+            Account account = clientsPortRepository.save(
                     ClientMapper.toClientEntityDto(
-                            validClientBeforeCreate(clientToSave)));
+                            validClientBeforeCreate(accountToSave)));
 
-            client.setCreateAt(client.getUpdateAt());
-            log.info(String.format(MSG_PROCESS_SERVICE, "created", "identification_number: ", clientToSave.getPersonalInformation().getIdentification().getNumber()));
-            return ClientMapper.toClientDto(ClientMapper.toDto(client), MSG_CLIENT_CREATED);
+            account.setCreateAt(account.getUpdateAt());
+            log.info(String.format(MSG_PROCESS_SERVICE, "created", "identification_number: ", accountToSave.getPersonalInformation().getIdentification().getNumber()));
+            return ClientMapper.toClientDto(ClientMapper.toDto(account), MSG_CLIENT_CREATED);
         } catch(DataAccessException ex){
-            log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "created",  "identification_number: ", clientToSave.getPersonalInformation().getIdentification().getNumber(),
+            log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "created",  "identification_number: ", accountToSave.getPersonalInformation().getIdentification().getNumber(),
                     ex.getMessage()));
-            throw new ClientException("422-1", ex.getMessage());
+            throw new AccountException("422-1", ex.getMessage());
         }
     }
 
-    public ClientDto getClientById(Long clientId) throws ClientException {
+    public AccountDto getClientById(Long clientId) throws AccountException {
         try{
-            Client client = existsClient(clientId);
+            Account account = existsClient(clientId);
             log.info(String.format(MSG_PROCESS_SERVICE, "getById", "clientId: ", clientId));
-            return ClientMapper.toClientDto(ClientMapper.toDto(client), MSG_CLIENT_GET);
+            return ClientMapper.toClientDto(ClientMapper.toDto(account), MSG_CLIENT_GET);
         } catch(DataAccessException ex){
             log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "getById",  "clientId: ", clientId,
                     ex.getMessage()));
-            throw new ClientException("422-2", ex.getMessage());
+            throw new AccountException("422-2", ex.getMessage());
         }
 
     }
 
-    public void deleteClient(Long clientId) throws ClientException {
+    public void deleteClient(Long clientId) throws AccountException {
         try{
-            Client client = existsClient(clientId);
+            Account account = existsClient(clientId);
 
-            ClientsDto clientEntity = ClientMapper.toClientEntityDto(client);
+            ClientsDto clientEntity = ClientMapper.toClientEntityDto(account);
             clientEntity.setIsActive(false);
 
             clientsPortRepository.save(clientEntity);
@@ -65,55 +65,55 @@ public class ClientsService implements ClientsFacade {
         } catch(DataAccessException ex){
             log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "delete",  "clientId: ", clientId,
                     ex.getMessage()));
-            throw new ClientException("422-3", ex.getMessage());
+            throw new AccountException("422-3", ex.getMessage());
         }
     }
 
-    public ClientDto updateClient(Client clientToUpdate) throws ClientException {
+    public AccountDto updateClient(Account accountToUpdate) throws AccountException {
         try{
-            Client clientExists = existsClient(clientToUpdate.getClientId());
+            Account accountExists = existsClient(accountToUpdate.getClientId());
 
-            clientToUpdate.getPersonalInformation().setPersonId(clientExists.getPersonalInformation().getPersonId());
-            Client client = clientsPortRepository.updateClient(ClientMapper.toClientEntityDto(clientToUpdate));
-            log.info(String.format(MSG_PROCESS_SERVICE, "update", "clientId: ", clientToUpdate.getClientId()));
-            return ClientMapper.toClientDto(ClientMapper.toDto(client), MSG_CLIENT_GET);
+            accountToUpdate.getPersonalInformation().setPersonId(accountExists.getPersonalInformation().getPersonId());
+            Account account = clientsPortRepository.updateClient(ClientMapper.toClientEntityDto(accountToUpdate));
+            log.info(String.format(MSG_PROCESS_SERVICE, "update", "clientId: ", accountToUpdate.getClientId()));
+            return ClientMapper.toClientDto(ClientMapper.toDto(account), MSG_CLIENT_GET);
         } catch(DataAccessException ex){
-            log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "update",  "clientId: ", clientToUpdate.getClientId(),
+            log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "update",  "clientId: ", accountToUpdate.getClientId(),
                     ex.getMessage()));
-            throw new ClientException("422-4", ex.getMessage());
+            throw new AccountException("422-4", ex.getMessage());
         }
     }
 
-    private Client existsClient(Long clientId) throws ClientException {
-        Client client = clientsPortRepository.getClientById(clientId);
+    private Account existsClient(Long clientId) throws AccountException {
+        Account account = clientsPortRepository.getClientById(clientId);
 
-        if(Objects.isNull(client.getClientId())  || client.getClientId() < 1L) {
+        if(Objects.isNull(account.getClientId())  || account.getClientId() < 1L) {
             log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "exists",  "clientId: ", clientId,
                     "client not found"));
-            throw new ClientException("422-5", "client not found");
+            throw new AccountException("422-5", "client not found");
         }
 
-        return client;
+        return account;
     }
 
-    private Client validClientBeforeCreate(Client clientToCreate) throws ClientException {
-        Client client = clientsPortRepository.getClientByIdentificationTypeIdAndIdentificationNumber(
-                clientToCreate.getPersonalInformation().getIdentification().getTypeId(), clientToCreate.getPersonalInformation().getIdentification().getNumber());
+    private Account validClientBeforeCreate(Account accountToCreate) throws AccountException {
+        Account account = clientsPortRepository.getClientByIdentificationTypeIdAndIdentificationNumber(
+                accountToCreate.getPersonalInformation().getIdentification().getTypeId(), accountToCreate.getPersonalInformation().getIdentification().getNumber());
 
-        if(!Objects.isNull(client.getClientId()) && client.getClientId() >= 1L ) {
-            if(client.getIsActive()) {
-                log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "exists",  "identification_number: ", clientToCreate.getPersonalInformation().getIdentification().getNumber(),
+        if(!Objects.isNull(account.getClientId()) && account.getClientId() >= 1L ) {
+            if(account.getIsActive()) {
+                log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "exists",  "identification_number: ", accountToCreate.getPersonalInformation().getIdentification().getNumber(),
                         "Client exists in system."));
-                throw new ClientException("422-5", "Client exists in system.");
+                throw new AccountException("422-5", "Client exists in system.");
             } else {
-                log.info(String.format(MSG_PROCESS_SERVICE, "exists so the information will be updated and actived", "clientId: ", client.getClientId()));
-                clientToCreate.setClientId(client.getClientId());
-                clientToCreate.getPersonalInformation().setPersonId(client.getPersonalInformation().getPersonId());
-                clientToCreate.setIsActive(true);
-                return clientToCreate;
+                log.info(String.format(MSG_PROCESS_SERVICE, "exists so the information will be updated and actived", "clientId: ", account.getClientId()));
+                accountToCreate.setClientId(account.getClientId());
+                accountToCreate.getPersonalInformation().setPersonId(account.getPersonalInformation().getPersonId());
+                accountToCreate.setIsActive(true);
+                return accountToCreate;
             }
         }else {
-            return clientToCreate;
+            return accountToCreate;
         }
 
     }

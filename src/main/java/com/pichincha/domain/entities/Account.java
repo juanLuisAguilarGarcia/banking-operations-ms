@@ -3,6 +3,7 @@ package com.pichincha.domain.entities;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -11,11 +12,13 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @SuperBuilder
 @Builder
-public class Client {
+public class Account {
+    private Long accountId;
     private Long clientId;
+    private Long accountNumber;
+    private AccountType accountType;
+    private BigDecimal initAmount;
     private Boolean isActive;
-    private String password;
-    private Person personalInformation;
     private Timestamp createAt;
     private Timestamp updateAt;
 }

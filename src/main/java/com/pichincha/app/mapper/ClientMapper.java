@@ -1,15 +1,11 @@
 package com.pichincha.app.mapper;
 
-import com.pichincha.domain.entities.Client;
-import com.pichincha.domain.entities.ContactInformation;
+import com.pichincha.domain.entities.Account;
 import com.pichincha.infra.adapter.db.entites.ClientsDto;
 import com.pichincha.infra.adapter.db.entites.IdentificationTypeDto;
 import com.pichincha.infra.adapter.db.entites.PersonsDto;
-import com.pichincha.infra.api.router.controller.dto.response.ContactInformationDto;
-import com.pichincha.infra.api.router.controller.dto.response.IdentificationDto;
-import com.pichincha.infra.api.router.controller.dto.response.PersonDto;
-import com.pichincha.infra.api.router.controller.dto.response.client.ClientDataDto;
-import com.pichincha.infra.api.router.controller.dto.response.client.ClientDto;
+import com.pichincha.infra.api.router.controller.dto.response.account.AccountsDataDto;
+import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
 import org.mapstruct.Mapper;
 import org.springframework.http.HttpStatus;
 
@@ -20,82 +16,82 @@ import java.util.Objects;
 @Mapper(componentModel = "spring")
 public interface ClientMapper {
 
-    static ClientDataDto toDto(Client client){
-        ClientDataDto clientDataDto = ClientDataDto.builder().clientId(client.getClientId()).build();
+    static AccountsDataDto toDto(Account account){
+        AccountsDataDto accountsDataDto = AccountsDataDto.builder().clientId(account.getClientId()).build();
 
-        clientDataDto.setPassword(client.getPassword());
-        clientDataDto.setIsActive(client.getIsActive());
-        clientDataDto.setPassword(client.getPassword());
-        clientDataDto.setCreateAt(client.getCreateAt());
-        clientDataDto.setUpdateAt(client.getUpdateAt());
+        accountsDataDto.setPassword(account.getPassword());
+        accountsDataDto.setIsActive(account.getIsActive());
+        accountsDataDto.setPassword(account.getPassword());
+        accountsDataDto.setCreateAt(account.getCreateAt());
+        accountsDataDto.setUpdateAt(account.getUpdateAt());
 
-        if(!Objects.isNull(client.getPersonalInformation())){
-            clientDataDto.setPersonalInformation(PersonDto.builder()
-                    .address(client.getPersonalInformation().getAddress())
-                    .age(client.getPersonalInformation().getAge())
-                    .firstName(client.getPersonalInformation().getFirstName())
-                    .lastName(client.getPersonalInformation().getLastName())
-                    .gender(client.getPersonalInformation().getGender()).build());
+        if(!Objects.isNull(account.getPersonalInformation())){
+            accountsDataDto.setPersonalInformation(PersonDto.builder()
+                    .address(account.getPersonalInformation().getAddress())
+                    .age(account.getPersonalInformation().getAge())
+                    .firstName(account.getPersonalInformation().getFirstName())
+                    .lastName(account.getPersonalInformation().getLastName())
+                    .gender(account.getPersonalInformation().getGender()).build());
 
-            if(!Objects.isNull(client.getPersonalInformation().getContactInformation())){
-                clientDataDto.getPersonalInformation().setContactInformation(ContactInformationDto.builder()
-                        .telephoneNumber(client.getPersonalInformation().getContactInformation().getTelephoneNumber()).build());
+            if(!Objects.isNull(account.getPersonalInformation().getContactInformation())){
+                accountsDataDto.getPersonalInformation().setContactInformation(ContactInformationDto.builder()
+                        .telephoneNumber(account.getPersonalInformation().getContactInformation().getTelephoneNumber()).build());
             }
 
-            if(!Objects.isNull(client.getPersonalInformation().getIdentification())){
-                clientDataDto.getPersonalInformation().setIdentification(IdentificationDto.builder()
-                        .number(client.getPersonalInformation().getIdentification().getNumber())
-                        .typeId(client.getPersonalInformation().getIdentification().getTypeId()).build());
+            if(!Objects.isNull(account.getPersonalInformation().getIdentification())){
+                accountsDataDto.getPersonalInformation().setIdentification(IdentificationDto.builder()
+                        .number(account.getPersonalInformation().getIdentification().getNumber())
+                        .typeId(account.getPersonalInformation().getIdentification().getTypeId()).build());
             }
         }
 
-        return clientDataDto;
+        return accountsDataDto;
     }
 
-    static ClientDto toClientDto(ClientDataDto client, String msg){
-        ClientDto clientDto =  ClientDto.builder().data(client).build();
+    static AccountDto toClientDto(AccountsDataDto client, String msg){
+        AccountDto clientDto =  AccountDto.builder().data(client).build();
         clientDto.setCode(String.valueOf(HttpStatus.OK.value()));
         clientDto.setMessage(msg);
 
         return clientDto;
     }
 
-    static ClientsDto toClientEntityDto(Client client) {
+    static ClientsDto toClientEntityDto(Account account) {
         PersonsDto personsDto = new PersonsDto();
 
-        if (Objects.isNull(client) ){
+        if (Objects.isNull(account) ){
             return ClientsDto.builder().build();
         }
 
-        if(!Objects.isNull(client.getPersonalInformation())) {
+        if(!Objects.isNull(account.getPersonalInformation())) {
             personsDto = PersonsDto.builder()
-                    .personId(client.getPersonalInformation().getPersonId())
-                    .address(client.getPersonalInformation().getAddress())
-                    .age(client.getPersonalInformation().getAge())
-                    .firstName(client.getPersonalInformation().getFirstName())
-                    .lastName(client.getPersonalInformation().getLastName())
-                    .gender(client.getPersonalInformation().getGender())
-                    .telephonNumber(client.getPersonalInformation().getContactInformation().getTelephoneNumber())
+                    .personId(account.getPersonalInformation().getPersonId())
+                    .address(account.getPersonalInformation().getAddress())
+                    .age(account.getPersonalInformation().getAge())
+                    .firstName(account.getPersonalInformation().getFirstName())
+                    .lastName(account.getPersonalInformation().getLastName())
+                    .gender(account.getPersonalInformation().getGender())
+                    .telephonNumber(account.getPersonalInformation().getContactInformation().getTelephoneNumber())
                     .updateAt(Timestamp.valueOf(LocalDateTime.now()))
                     .identification(IdentificationTypeDto.builder().build()).build();
 
-            if(!Objects.isNull(client.getPersonalInformation().getContactInformation())) {
-                personsDto.setIdentificationNumber(client.getPersonalInformation().getIdentification().getNumber());
+            if(!Objects.isNull(account.getPersonalInformation().getContactInformation())) {
+                personsDto.setIdentificationNumber(account.getPersonalInformation().getIdentification().getNumber());
             }
 
-            if(!Objects.isNull(client.getPersonalInformation().getIdentification())) {
+            if(!Objects.isNull(account.getPersonalInformation().getIdentification())) {
                 personsDto.setIdentification(IdentificationTypeDto.builder().identificationTypeId(
-                        client.getPersonalInformation().getIdentification().getTypeId()
+                        account.getPersonalInformation().getIdentification().getTypeId()
                 ).build());
             }
         }
 
         return  ClientsDto.builder()
-                .clientId(client.getClientId())
+                .clientId(account.getClientId())
                 .isActive(true)
                 .createAt(java.sql.Timestamp.valueOf(LocalDateTime.now()))
                 .updateAt(java.sql.Timestamp.valueOf(LocalDateTime.now()))
                 .persons(personsDto)
-                .password(client.getPassword()).build();
+                .password(account.getPassword()).build();
     }
 }

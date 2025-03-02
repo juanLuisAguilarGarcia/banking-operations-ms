@@ -2,8 +2,7 @@ package com.pichincha.infra.api.router.controller.error.handler;
 
 import com.pichincha.infra.api.router.controller.dto.GenericResponseDTO;
 import com.pichincha.infra.api.router.controller.error.ErrorConsts;
-import com.pichincha.infra.api.router.controller.error.exception.ClientException;
-import org.springframework.http.HttpHeaders;
+import com.pichincha.infra.api.router.controller.error.exception.AccountException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.*;
@@ -41,9 +40,9 @@ public class ErrorHandler {
         return new ResponseEntity<>(errorMesage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ClientException.class})
+    @ExceptionHandler({AccountException.class})
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    protected ResponseEntity<GenericResponseDTO> genericException(ClientException ex ){
+    protected ResponseEntity<GenericResponseDTO> genericException(AccountException ex ){
         GenericResponseDTO errorMesage = new GenericResponseDTO(
                 ex.getCode(),
                 ex.getMessage()

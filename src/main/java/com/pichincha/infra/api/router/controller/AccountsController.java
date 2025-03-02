@@ -2,11 +2,11 @@ package com.pichincha.infra.api.router.controller;
 
 import com.pichincha.infra.api.router.RouterConsts;
 import com.pichincha.infra.api.router.controller.dto.GenericResponseDTO;
-import com.pichincha.infra.api.router.controller.dto.request.CreateClientDto;
-import com.pichincha.infra.api.router.controller.dto.response.client.ClientDto;
-import com.pichincha.infra.api.router.controller.error.exception.ClientException;
-import com.pichincha.infra.api.router.controller.mapper.ClientDtoMapper;
-import com.pichincha.infra.api.router.facade.ClientsFacade;
+import com.pichincha.infra.api.router.controller.dto.request.CreateAccountDto;
+import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
+import com.pichincha.infra.api.router.controller.error.exception.AccountException;
+import com.pichincha.infra.api.router.controller.mapper.AccountsDtoMapper;
+import com.pichincha.infra.api.router.facade.AccountsFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,20 +29,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @CrossOrigin(RouterConsts.CROSS_ORIGIN)
 @RestController
-@RequestMapping(path = RouterConsts.CONTROLLER_PATH)
-@Tag(name = RouterConsts.API)
-public class ClientsController {
+@RequestMapping(path = RouterConsts.CONTROLLER_ACCOUNTS_PATH)
+@Tag(name = RouterConsts.API_ACCOUNTS)
+public class AccountsController {
 
     @Autowired
-    private ClientDtoMapper clientDtoMapper;
+    private AccountsDtoMapper accountsDtoMapper;
 
     @Autowired
-    private ClientsFacade clientsFacade;
+    private AccountsFacade accountsFacade;
 
     @PostMapping(value = "", produces = APPLICATION_JSON_VALUE)
-    @Operation(summary = RouterConsts.API_OPERATION_CREATE_CLIENT, description = RouterConsts.NOTE_API_OPERATION_CREATE_CLIENT)
+    @Operation(summary = RouterConsts.API_OPERATION_CREATE_ACCOUNT, description = RouterConsts.NOTE_API_OPERATION_CREATE_ACCOUNT)
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = RouterConsts.API_RESPONSE_COD_200,
-                    content =  { @Content( schema = @Schema(implementation =  ClientDto.class), mediaType = APPLICATION_JSON_VALUE)}),
+                    content =  { @Content( schema = @Schema(implementation =  AccountDto.class), mediaType = APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "400", description = RouterConsts.API_RESPONSE_COD_400,
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "404", description = RouterConsts.API_RESPONSE_COD_404,
@@ -52,20 +52,20 @@ public class ClientsController {
             @ApiResponse(responseCode = "500", description = RouterConsts.API_RESPONSE_COD_500,
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)})
     })
-    public ResponseEntity<ClientDto> createClient(
-            @Parameter(description = RouterConsts.API_PARAM_REQUEST_CREATE_CLIENT, required = true) @Validated @RequestBody(required = true) CreateClientDto clientDto) throws ClientException {
-        log.info(String.format(MSG_PROCESS, "init", "create",  clientDto.getPersonalInformation().getIdentification().getNumber()));
+    public ResponseEntity<AccountDto> createAccount(
+            @Parameter(description = API_PARAM_REQUEST_CREATE_ACCOUNT, required = true) @Validated @RequestBody(required = true) CreateAccountDto accountDto) throws AccountException {
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "create",  accountDto.getAccountNumber()));
 
-        ClientDto response = clientsFacade.createClient(ClientDtoMapper.toEntity(clientDto));
+        AccountDto response = accountsFacade.createAccount(AccountsDtoMapper.toEntity(accountDto));
 
-        log.info(String.format(MSG_PROCESS, "end", "create",  clientDto.getPersonalInformation().getIdentification().getNumber()));
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "end", "create", accountDto.getAccountNumber()));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/{client_id}", produces = APPLICATION_JSON_VALUE)
-    @Operation(summary = RouterConsts.API_OPERATION_GET_CLIENT_BY_ID, description = RouterConsts.NOTE_API_OPERATION_CREATE_CLIENT)
+    @GetMapping(value = "/{account_id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = RouterConsts.API_OPERATION_GET_ACCOUNT_BY_ID, description = RouterConsts.NOTE_API_OPERATION_GET_BY_ID_ACCOUNT)
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = RouterConsts.API_RESPONSE_COD_200,
-            content =  { @Content( schema = @Schema(implementation =  ClientDto.class), mediaType = APPLICATION_JSON_VALUE)}),
+            content =  { @Content( schema = @Schema(implementation =  AccountDto.class), mediaType = APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "400", description = RouterConsts.API_RESPONSE_COD_400,
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "404", description = RouterConsts.API_RESPONSE_COD_404,
@@ -75,18 +75,18 @@ public class ClientsController {
             @ApiResponse(responseCode = "500", description = RouterConsts.API_RESPONSE_COD_500,
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)})
     })
-    public ResponseEntity<ClientDto> getClientById(
-            @Parameter(description = RouterConsts.API_PARAM_REQUEST_GET_CLIENT, required = true) @PathVariable(name = PARAM_CLIENT_ID ) Long clientId) throws ClientException {
-        log.info(String.format(MSG_PROCESS, "init", "get",  clientId));
+    public ResponseEntity<AccountDto> getAccountById(
+            @Parameter(description = RouterConsts.API_PARAM_REQUEST_GET_ACCOUNT, required = true) @PathVariable(name = PARAM_ACCOUNT_ID ) Long accountId) throws AccountException {
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "get",  accountId));
 
-        ClientDto response = clientsFacade.getClientById(clientId);
+        AccountDto response = accountsFacade.getAccountById(accountId);
 
-        log.info(String.format(MSG_PROCESS, "end", "get",  clientId));
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "end", "get",  accountId));
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping(value = "/{client_id}", produces = APPLICATION_JSON_VALUE)
-    @Operation(summary = RouterConsts.API_OPERATION_DELETE_CLIENT, description = RouterConsts.NOTE_API_OPERATION_CREATE_CLIENT)
+    @DeleteMapping(value = "/{account_id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = RouterConsts.API_OPERATION_DELETE_ACCOUNT, description = RouterConsts.NOTE_API_OPERATION_DELETE_ACCOUNT)
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = RouterConsts.API_RESPONSE_COD_200,
             content =  { @Content( schema = @Schema(implementation =  GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "400", description = RouterConsts.API_RESPONSE_COD_400,
@@ -98,22 +98,22 @@ public class ClientsController {
             @ApiResponse(responseCode = "500", description = RouterConsts.API_RESPONSE_COD_500,
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)})
     })
-    public ResponseEntity<GenericResponseDTO> deleteClient(
-            @Parameter(description = RouterConsts.API_PARAM_REQUEST_GET_CLIENT, required = true) @PathVariable(name = PARAM_CLIENT_ID) Long clientId) throws ClientException {
-        log.info(String.format(MSG_PROCESS, "init", "delete",  clientId));
+    public ResponseEntity<GenericResponseDTO> deleteAccount(
+            @Parameter(description = RouterConsts.API_PARAM_REQUEST_GET_ACCOUNT, required = true) @PathVariable(name = PARAM_ACCOUNT_ID) Long accountId) throws AccountException {
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "delete",  accountId));
 
-        clientsFacade.deleteClient(clientId);
+        accountsFacade.deleteAccount(accountId);
 
-        log.info(String.format(MSG_PROCESS, "end", "delete",  clientId));
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "end", "delete",  accountId));
         return ResponseEntity.ok(GenericResponseDTO.builder()
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message(MSG_CONFIRMATION_DELETE).build());
     }
 
-    @PutMapping(value = "/{client_id}", produces = APPLICATION_JSON_VALUE)
-    @Operation(summary = RouterConsts.API_OPERATION_CREATE_CLIENT, description = RouterConsts.NOTE_API_OPERATION_CREATE_CLIENT)
+    @PutMapping(value = "/{account_id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = RouterConsts.API_OPERATION_UPDATE_ACCOUNT, description = RouterConsts.NOTE_API_OPERATION_UPDATE_ACCOUNT)
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = RouterConsts.API_RESPONSE_COD_200,
-            content =  { @Content( schema = @Schema(implementation =  ClientDto.class), mediaType = APPLICATION_JSON_VALUE)}),
+            content =  { @Content( schema = @Schema(implementation =  AccountDto.class), mediaType = APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "400", description = RouterConsts.API_RESPONSE_COD_400,
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)}),
             @ApiResponse(responseCode = "404", description = RouterConsts.API_RESPONSE_COD_404,
@@ -123,15 +123,15 @@ public class ClientsController {
             @ApiResponse(responseCode = "500", description = RouterConsts.API_RESPONSE_COD_500,
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)})
     })
-    public ResponseEntity<ClientDto> updateClient(
-            @Parameter(description = RouterConsts.API_OPERATION_UPDATE_CLIENT, required = true) @PathVariable(name = PARAM_CLIENT_ID) Long clientId,
-            @Parameter(description = RouterConsts.API_PARAM_REQUEST_UPDATE_CLIENT, required = true) @Valid @RequestBody(required = true) CreateClientDto clientDto) throws ClientException {
-        log.info(String.format(MSG_PROCESS, "init", "update",  clientId));
+    public ResponseEntity<AccountDto> updateAccount(
+            @Parameter(description = API_PARAM_REQUEST_GET_ACCOUNT, required = true) @PathVariable(name = PARAM_ACCOUNT_ID) Long accountId,
+            @Parameter(description = RouterConsts.API_PARAM_REQUEST_UPDATE_ACCOUNT, required = true) @Valid @RequestBody(required = true) CreateAccountDto accountDto) throws AccountException {
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "update",  accountId));
 
-        clientDto.setClientId(clientId);
-        ClientDto response = clientsFacade.updateClient(ClientDtoMapper.toEntity(clientDto));
+        accountDto.setClientId(accountId);
+        AccountDto response = accountsFacade.updateAccount(AccountsDtoMapper.toEntity(accountDto));
 
-        log.info(String.format(MSG_PROCESS, "init", "update",  clientId));
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "update",  accountId));
         return ResponseEntity.ok(response);
     }
 }

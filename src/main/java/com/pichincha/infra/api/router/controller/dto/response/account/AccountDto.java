@@ -1,4 +1,4 @@
-package com.pichincha.infra.api.router.controller.dto.response.client;
+package com.pichincha.infra.api.router.controller.dto.response.account;
 
 import com.pichincha.infra.api.router.controller.dto.response.GenericResponseDTO;
 import lombok.*;
@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ClientDto extends GenericResponseDTO {
-    private ClientDataDto data;
+public class AccountDto extends GenericResponseDTO {
+    private AccountsDataDto data;
 }

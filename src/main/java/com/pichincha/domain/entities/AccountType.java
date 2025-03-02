@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Identification {
-    private Long typeId;
-    private Long number;
+public class AccountType {
+    private Long accountTypeId;
+    private String description;
 }

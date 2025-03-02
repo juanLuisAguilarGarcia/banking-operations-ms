@@ -1,9 +1,7 @@
 package com.pichincha.infra.adapter.db.mapper;
 
-import com.pichincha.domain.entities.Client;
-import com.pichincha.domain.entities.ContactInformation;
-import com.pichincha.domain.entities.Identification;
-import com.pichincha.domain.entities.Person;
+import com.pichincha.domain.entities.Account;
+import com.pichincha.domain.entities.AccountType;
 import com.pichincha.infra.adapter.db.entites.ClientsDto;
 import org.mapstruct.Mapper;
 
@@ -12,9 +10,9 @@ import java.util.Objects;
 @Mapper(componentModel = "spring")
 public interface MapperClientEntity {
 
-    static Client toClient(ClientsDto client){
+    static Account toClient(ClientsDto client){
         if (Objects.isNull(client)) {
-            return Client.builder().build();
+            return Account.builder().build();
         }
 
         Person person = Person.builder().build();
@@ -27,7 +25,7 @@ public interface MapperClientEntity {
                     .firstName(client.getPersons().getFirstName())
                     .lastName(client.getPersons().getLastName())
                     .gender(client.getPersons().getGender())
-                    .identification(Identification.builder()
+                    .identification(AccountType.builder()
                             .number(client.getPersons().getIdentificationNumber()).build())
                     .contactInformation(ContactInformation.builder()
                             .telephoneNumber(client.getPersons().getTelephonNumber()).build()).build();
@@ -37,7 +35,7 @@ public interface MapperClientEntity {
             }
         }
 
-        return Client.builder()
+        return Account.builder()
                 .isActive(client.getIsActive())
                 .clientId(client.getClientId())
                 .password(client.getPassword())

@@ -1,6 +1,6 @@
 package com.pichincha.infra.adapter.db;
 
-import com.pichincha.domain.entities.Client;
+import com.pichincha.domain.entities.Account;
 import com.pichincha.domain.port.db.ClientsPortRepository;
 import com.pichincha.infra.adapter.db.entites.ClientsDto;
 import com.pichincha.infra.adapter.db.jpa.ClientsJpaRepository;
@@ -14,11 +14,11 @@ public class ClientsRepository implements ClientsPortRepository {
     @Autowired
     private ClientsJpaRepository clientsJpaRepository;
 
-    public Client save(ClientsDto clientToSave){
+    public Account save(ClientsDto clientToSave){
         return MapperClientEntity.toClient(clientsJpaRepository.save(clientToSave));
     }
 
-    public Client getClientById(Long clientId){
+    public Account getClientById(Long clientId){
         return MapperClientEntity.toClient(clientsJpaRepository.findByClientIdAndIsActive(clientId, true));
     }
 
@@ -27,11 +27,11 @@ public class ClientsRepository implements ClientsPortRepository {
         return;
     }
 
-    public Client updateClient(ClientsDto clientToUpdate){
+    public Account updateClient(ClientsDto clientToUpdate){
         return MapperClientEntity.toClient(clientsJpaRepository.save(clientToUpdate));
     }
 
-    public Client getClientByIdentificationTypeIdAndIdentificationNumber(Long typeId, Long number){
+    public Account getClientByIdentificationTypeIdAndIdentificationNumber(Long typeId, Long number){
         return MapperClientEntity.toClient(clientsJpaRepository.findByIdentificationTypeIdAndNumber(typeId, number));
     }
 }
