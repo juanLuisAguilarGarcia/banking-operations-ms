@@ -5,7 +5,7 @@ import com.pichincha.infra.api.router.controller.dto.GenericResponseDTO;
 import com.pichincha.infra.api.router.controller.dto.request.CreateMovementDto;
 import com.pichincha.infra.api.router.controller.dto.request.UpdateMovementDto;
 import com.pichincha.infra.api.router.controller.dto.response.movement.MovementDto;
-import com.pichincha.infra.api.router.controller.error.exception.MovementException;
+import com.pichincha.app.exception.MovementException;
 import com.pichincha.infra.api.router.controller.mapper.MovementsDtoMapper;
 import com.pichincha.infra.api.router.facade.MovementsFacade;
 import io.swagger.v3.oas.annotations.Operation;

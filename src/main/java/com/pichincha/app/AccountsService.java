@@ -5,7 +5,7 @@ import com.pichincha.domain.entities.Account;
 import com.pichincha.domain.port.db.AccountsPortRepository;
 import com.pichincha.infra.adapter.db.entites.AccountsDto;
 import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
-import com.pichincha.infra.api.router.controller.error.exception.AccountException;
+import com.pichincha.app.exception.AccountException;
 import com.pichincha.infra.api.router.facade.AccountsFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +102,7 @@ public class AccountsService implements AccountsFacade {
             if(account.getIsActive()) {
                 log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "exists",  "account_number: ", accountToCreate.getAccountNumber(),
                         "Account exists in system."));
-                throw new AccountException("422-5", "Account exists in system.");
+                throw new AccountException("422-6", "Account exists in system.");
             } else {
                 log.info(String.format(MSG_PROCESS_SERVICE, "exists so the information will be updated and actived", "accountId: ", account.getAccountId()));
                 accountToCreate.setAccountId(account.getAccountId());

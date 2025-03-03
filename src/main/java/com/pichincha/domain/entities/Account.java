@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ public class Account {
     private Long accountId;
     private Long clientId;
     private Long accountNumber;
+    private List<Movement> movements;
     private AccountType accountType;
     private BigDecimal initAmount;
     private Boolean isActive;

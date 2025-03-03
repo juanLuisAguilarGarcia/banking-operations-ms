@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AccountException extends Exception {
+public class BankingOperationsException extends Exception {
     private final String code;
     private final String message;
 }

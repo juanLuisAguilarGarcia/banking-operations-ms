@@ -30,6 +30,7 @@ public class AccountsDto {
     @JoinColumn(name = "account_type_id", referencedColumnName = "account_type_id")
     private AccountTypeDto accountType;
 
+    @OrderBy("movementId DESC")
     @OneToMany(mappedBy= "account")
     private List<MovementsDto> movements;
 

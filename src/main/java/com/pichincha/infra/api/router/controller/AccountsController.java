@@ -4,7 +4,7 @@ import com.pichincha.infra.api.router.RouterConsts;
 import com.pichincha.infra.api.router.controller.dto.GenericResponseDTO;
 import com.pichincha.infra.api.router.controller.dto.request.CreateAccountDto;
 import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
-import com.pichincha.infra.api.router.controller.error.exception.AccountException;
+import com.pichincha.app.exception.AccountException;
 import com.pichincha.infra.api.router.controller.mapper.AccountsDtoMapper;
 import com.pichincha.infra.api.router.facade.AccountsFacade;
 import io.swagger.v3.oas.annotations.Operation;
