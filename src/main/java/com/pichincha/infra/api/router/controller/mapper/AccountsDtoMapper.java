@@ -10,12 +10,13 @@ import java.util.Objects;
 @Mapper(componentModel = "spring")
 public interface AccountsDtoMapper {
 
-    static Account toEntity(CreateAccountDto createAccountDto){
+    static Account toEntity(CreateAccountDto createAccountDto, Long accountId){
         if(Objects.isNull(createAccountDto)){
             return Account.builder().build();
         }
 
         Account account = Account.builder()
+                .accountId(accountId)
                 .clientId(createAccountDto.getClientId())
                 .accountNumber(createAccountDto.getAccountNumber())
                 .accountType(AccountType.builder()

@@ -18,9 +18,9 @@ public class OpenAPIConfiguration {
         myContact.setEmail("juanaguilargarcia20@gmail.com");
 
         Info information = new Info()
-                .title("Clients System API")
+                .title("Banking Operations System API")
                 .version("1.0.0")
-                .description("This API exposes endpoints to manage client.")
+                .description("This API exposes endpoints to manage banking operations.")
                 .contact(myContact);
         return new OpenAPI().info(information);
     }

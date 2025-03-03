@@ -8,9 +8,9 @@ public interface AccountsFacade {
 
     public AccountDto createAccount(Account account) throws AccountException;
 
-    public AccountDto getAccountById(Long clientId) throws AccountException;
+    public AccountDto getAccountById(Long accountId) throws AccountException;
 
-    public void deleteAccount(Long clientId) throws AccountException;
+    public void deleteAccount(Long accountId) throws AccountException;
 
     public AccountDto updateAccount(Account account) throws AccountException;
 }

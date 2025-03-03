@@ -7,17 +7,17 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "identification_type")
+@Table(name = "account_type")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IdentificationTypeDto {
+public class AccountTypeDto {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(name = "identification_type_id")
-    private Long identificationTypeId;
+    @Column(name = "account_type_id")
+    private Long accountTypeId;
 
     @Column(length = 100)
     private String description;
@@ -28,6 +28,6 @@ public class IdentificationTypeDto {
     @Column(name = "update_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp updateAt;
 
-    @OneToMany(mappedBy= "identification")
-    private List<PersonsDto> people;
+    @OneToMany(mappedBy= "accountType")
+    private List<AccountsDto> accounts;
 }

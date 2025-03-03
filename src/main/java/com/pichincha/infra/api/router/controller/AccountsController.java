@@ -56,7 +56,7 @@ public class AccountsController {
             @Parameter(description = API_PARAM_REQUEST_CREATE_ACCOUNT, required = true) @Validated @RequestBody(required = true) CreateAccountDto accountDto) throws AccountException {
         log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "create",  accountDto.getAccountNumber()));
 
-        AccountDto response = accountsFacade.createAccount(AccountsDtoMapper.toEntity(accountDto));
+        AccountDto response = accountsFacade.createAccount(AccountsDtoMapper.toEntity(accountDto, null));
 
         log.info(String.format(MSG_PROCESS_ACCOUNT, "end", "create", accountDto.getAccountNumber()));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -128,8 +128,7 @@ public class AccountsController {
             @Parameter(description = RouterConsts.API_PARAM_REQUEST_UPDATE_ACCOUNT, required = true) @Valid @RequestBody(required = true) CreateAccountDto accountDto) throws AccountException {
         log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "update",  accountId));
 
-        accountDto.setClientId(accountId);
-        AccountDto response = accountsFacade.updateAccount(AccountsDtoMapper.toEntity(accountDto));
+        AccountDto response = accountsFacade.updateAccount(AccountsDtoMapper.toEntity(accountDto, accountId));
 
         log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "update",  accountId));
         return ResponseEntity.ok(response);

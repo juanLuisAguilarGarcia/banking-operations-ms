@@ -1,7 +1,6 @@
 package com.pichincha.infra.api.router.controller.dto.response.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pichincha.infra.api.router.controller.dto.response.account.AccountTypeDto;
 import lombok.*;
 
 import java.math.BigDecimal;
