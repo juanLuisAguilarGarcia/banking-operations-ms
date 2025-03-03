@@ -5,6 +5,7 @@ import com.pichincha.infra.api.router.controller.dto.GenericResponseDTO;
 import com.pichincha.infra.api.router.controller.dto.request.CreateAccountDto;
 import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
 import com.pichincha.app.exception.AccountException;
+import com.pichincha.infra.api.router.controller.dto.response.account.AccountStateDto;
 import com.pichincha.infra.api.router.controller.mapper.AccountsDtoMapper;
 import com.pichincha.infra.api.router.facade.AccountsFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.sql.Date;
+import java.util.List;
 
 import static com.pichincha.infra.api.router.RouterConsts.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -131,6 +135,31 @@ public class AccountsController {
         AccountDto response = accountsFacade.updateAccount(AccountsDtoMapper.toEntity(accountDto, accountId));
 
         log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "update",  accountId));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "reports/account-state/{client_id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = RouterConsts.API_OPERATION_REPORT_ACCOUNT_STATE, description = RouterConsts.NOTE_API_OPERATION_REPORT_ACCOUNT_STATE)
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = RouterConsts.API_RESPONSE_COD_200,
+            content =  { @Content( schema = @Schema(implementation =  AccountStateDto.class), mediaType = APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "400", description = RouterConsts.API_RESPONSE_COD_400,
+                    content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "404", description = RouterConsts.API_RESPONSE_COD_404,
+                    content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "422", description = RouterConsts.API_RESPONSE_COD_422,
+                    content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "500", description = RouterConsts.API_RESPONSE_COD_500,
+                    content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)})
+    })
+    public ResponseEntity<AccountStateDto> accountState(
+            @Parameter(description = API_PARAM_REQUEST_GET_ACCOUNT, required = true) @PathVariable(name = PARAM_CLIENT_ID) Long clientId,
+            @Parameter(description = API_PARAM_REQUEST_INIT_DATE, required = true) @RequestParam(name = PARAM_INIT_DATE) Date initDate,
+            @Parameter(description = API_PARAM_REQUEST_END_DATE, required = true) @RequestParam(name = PARAM_END_DATE) Date endDate) throws AccountException {
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "state",  clientId));
+
+        AccountStateDto response = accountsFacade.accountState(clientId, initDate, endDate);
+
+        log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "state",  clientId));
         return ResponseEntity.ok(response);
     }
 }

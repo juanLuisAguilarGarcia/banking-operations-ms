@@ -10,6 +10,7 @@ public class ServiceConsts {
     public static final String MSG_ACCOUNT_CREATED = "account created";
     public static final String MSG_ACCOUNT_GET = "account found";
     public static final String MSG_ACCOUNT_UPDATE = "account updated";
+    public static final String MSG_ACCOUNT_STATE = " account state information";
     public static final String MSG_MOVEMENT_CREATED = "movement created";
     public static final String MSG_MOVEMENT_GET = "movement found";
     public static final String MSG_MOVEMENT_UPDATE = "movement updated";

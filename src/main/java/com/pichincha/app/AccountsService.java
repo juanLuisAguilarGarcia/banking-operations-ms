@@ -6,12 +6,17 @@ import com.pichincha.domain.port.db.AccountsPortRepository;
 import com.pichincha.infra.adapter.db.entites.AccountsDto;
 import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
 import com.pichincha.app.exception.AccountException;
+import com.pichincha.infra.api.router.controller.dto.response.account.AccountStateDto;
+import com.pichincha.infra.api.router.controller.dto.response.movement.MovementDto;
 import com.pichincha.infra.api.router.facade.AccountsFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 import static com.pichincha.app.ServiceConsts.*;
@@ -79,6 +84,27 @@ public class AccountsService implements AccountsFacade {
             log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "update",  "accountId: ", accountToUpdate.getAccountId(),
                     ex.getMessage()));
             throw new AccountException("422-4", ex.getMessage());
+        }
+    }
+
+    public AccountStateDto accountState(Long clientId, Date initDate, Date endDate) throws AccountException {
+        try{
+            List<Account> accounts = accountsPortRepository.getAccountsByClientIdAndDates(clientId,
+                    new java.sql.Timestamp(initDate.getTime()),
+                    new java.sql.Timestamp(endDate.getTime()));
+
+            if(accounts.isEmpty()){
+                log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "exists",  "clientId: ", clientId,
+                        "accounts not found"));
+                throw new AccountException("422-16", "accounts not found");
+            }
+
+            log.info(String.format(MSG_PROCESS_SERVICE, "account state", "clientId: ", clientId));
+            return AccountMapper.toAccountStateDto(accounts, MSG_ACCOUNT_STATE );
+        } catch(DataAccessException ex){
+            log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "account state",  "clientId: ", clientId,
+                    ex.getMessage()));
+            throw new AccountException("422-15", ex.getMessage());
         }
     }
 

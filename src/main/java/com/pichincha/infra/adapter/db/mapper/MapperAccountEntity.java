@@ -52,4 +52,16 @@ public interface MapperAccountEntity {
                 .accountType(accountType)
                 .movements(movements).build();
     }
+
+    static List<Account> toAccountLis(List<AccountsDto> accountsDto){
+        if (Objects.isNull(accountsDto)) {
+            return new ArrayList<>();
+        }
+
+        List<Account> accounts = new ArrayList<>();
+        accountsDto.forEach(a -> accounts.add(toAccount(a)));
+
+
+        return accounts;
+    }
 }

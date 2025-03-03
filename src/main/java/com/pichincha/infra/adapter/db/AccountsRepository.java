@@ -9,6 +9,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 @Repository
 public class AccountsRepository implements AccountsPortRepository {
 
@@ -37,5 +40,9 @@ public class AccountsRepository implements AccountsPortRepository {
 
     public Account getAccountByAccountTypeIdAndAccountNumber(Long typeId, Long number){
         return MapperAccountEntity.toAccount(accountsJpaRepository.findByIdentificationTypeIdAndNumber(typeId, number));
+    }
+
+    public List<Account> getAccountsByClientIdAndDates(Long clientId, Timestamp initDate, Timestamp endDate){
+        return MapperAccountEntity.toAccountLis(accountsJpaRepository.getAccountsByClientIdAndDates(clientId, initDate, endDate));
     }
 }
