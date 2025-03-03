@@ -1,5 +1,6 @@
 package com.pichincha.infra.api.router.controller;
 
+import com.pichincha.infra.adapter.http.exception.ClientFeingException;
 import com.pichincha.infra.api.router.RouterConsts;
 import com.pichincha.infra.api.router.controller.dto.GenericResponseDTO;
 import com.pichincha.infra.api.router.controller.dto.request.CreateAccountDto;
@@ -57,7 +58,7 @@ public class AccountsController {
                     content =  { @Content( schema = @Schema(implementation = GenericResponseDTO.class), mediaType = APPLICATION_JSON_VALUE)})
     })
     public ResponseEntity<AccountDto> createAccount(
-            @Parameter(description = API_PARAM_REQUEST_CREATE_ACCOUNT, required = true) @Validated @RequestBody(required = true) CreateAccountDto accountDto) throws AccountException {
+            @Parameter(description = API_PARAM_REQUEST_CREATE_ACCOUNT, required = true) @Validated @RequestBody(required = true) CreateAccountDto accountDto) throws AccountException, ClientFeingException {
         log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "create",  accountDto.getAccountNumber()));
 
         AccountDto response = accountsFacade.createAccount(AccountsDtoMapper.toEntity(accountDto, null));
@@ -154,7 +155,7 @@ public class AccountsController {
     public ResponseEntity<AccountStateDto> accountState(
             @Parameter(description = API_PARAM_REQUEST_GET_ACCOUNT, required = true) @PathVariable(name = PARAM_CLIENT_ID) Long clientId,
             @Parameter(description = API_PARAM_REQUEST_INIT_DATE, required = true) @RequestParam(name = PARAM_INIT_DATE) Date initDate,
-            @Parameter(description = API_PARAM_REQUEST_END_DATE, required = true) @RequestParam(name = PARAM_END_DATE) Date endDate) throws AccountException {
+            @Parameter(description = API_PARAM_REQUEST_END_DATE, required = true) @RequestParam(name = PARAM_END_DATE) Date endDate) throws AccountException, ClientFeingException {
         log.info(String.format(MSG_PROCESS_ACCOUNT, "init", "state",  clientId));
 
         AccountStateDto response = accountsFacade.accountState(clientId, initDate, endDate);

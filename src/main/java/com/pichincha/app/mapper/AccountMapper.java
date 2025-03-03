@@ -49,15 +49,15 @@ public interface AccountMapper {
         return accountDto;
     }
 
-    static AccountStateDto toAccountStateDto(List<Account> accounts, String msg){
-        AccountStateDto accountStateDto =  AccountStateDto.builder().data(toAccountStateDataDtoLis(accounts)).build();
+    static AccountStateDto toAccountStateDto(List<Account> accounts, String msg, String clientName){
+        AccountStateDto accountStateDto =  AccountStateDto.builder().data(toAccountStateDataDtoLis(accounts, clientName)).build();
         accountStateDto.setCode(String.valueOf(HttpStatus.OK.value()));
         accountStateDto.setMessage(msg);
 
         return accountStateDto;
     }
 
-    static List<AccountStateDataDto> toAccountStateDataDtoLis(List<Account> accounts){
+    static List<AccountStateDataDto> toAccountStateDataDtoLis(List<Account> accounts, String clientName){
 
          if(accounts.isEmpty()){
              return new ArrayList<>();
@@ -70,7 +70,7 @@ public interface AccountMapper {
                 accountStates.add(AccountStateDataDto.builder()
                         .date(a.getCreateAt())
                         .accountNumber(a.getAccountNumber())
-                        .clientName(a.getClientId().toString())
+                        .clientName(clientName)
                         .initAmount(a.getInitAmount())
                         .isActive(a.getIsActive())
                         .balanceAmount((!a.getMovements().isEmpty() &&  a.getMovements().size() > 0)
@@ -125,6 +125,7 @@ public interface AccountMapper {
                 .accountNumber(account.getAccountNumber())
                 .createAt(java.sql.Timestamp.valueOf(LocalDateTime.now()))
                 .updateAt(java.sql.Timestamp.valueOf(LocalDateTime.now()))
+                .movements(new ArrayList<>())
                 .accountType(accountTypeDto).build();
     }
 }

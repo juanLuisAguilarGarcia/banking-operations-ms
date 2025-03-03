@@ -2,8 +2,11 @@ package com.pichincha.app;
 
 import com.pichincha.app.mapper.AccountMapper;
 import com.pichincha.domain.entities.Account;
+import com.pichincha.domain.entities.Client;
 import com.pichincha.domain.port.db.AccountsPortRepository;
+import com.pichincha.domain.port.http.ClientsPortRepository;
 import com.pichincha.infra.adapter.db.entites.AccountsDto;
+import com.pichincha.infra.adapter.http.exception.ClientFeingException;
 import com.pichincha.infra.api.router.controller.dto.response.account.AccountDto;
 import com.pichincha.app.exception.AccountException;
 import com.pichincha.infra.api.router.controller.dto.response.account.AccountStateDto;
@@ -28,8 +31,13 @@ public class AccountsService implements AccountsFacade {
     @Autowired
     private AccountsPortRepository accountsPortRepository;
 
-    public AccountDto createAccount(Account accountToSave) throws AccountException {
+    @Autowired
+    private ClientsPortRepository clientsPortRepository;
+
+    public AccountDto createAccount(Account accountToSave) throws AccountException, ClientFeingException {
         try{
+            existsClient(accountToSave.getClientId());
+
             Account account = accountsPortRepository.save(
                     AccountMapper.toAccountEntityDto(
                             validAccountBeforeCreate(accountToSave)));
@@ -87,8 +95,10 @@ public class AccountsService implements AccountsFacade {
         }
     }
 
-    public AccountStateDto accountState(Long clientId, Date initDate, Date endDate) throws AccountException {
+    public AccountStateDto accountState(Long clientId, Date initDate, Date endDate) throws AccountException, ClientFeingException {
         try{
+            Client client = existsClient(clientId);
+
             List<Account> accounts = accountsPortRepository.getAccountsByClientIdAndDates(clientId,
                     new java.sql.Timestamp(initDate.getTime()),
                     new java.sql.Timestamp(endDate.getTime()));
@@ -100,7 +110,7 @@ public class AccountsService implements AccountsFacade {
             }
 
             log.info(String.format(MSG_PROCESS_SERVICE, "account state", "clientId: ", clientId));
-            return AccountMapper.toAccountStateDto(accounts, MSG_ACCOUNT_STATE );
+            return AccountMapper.toAccountStateDto(accounts, MSG_ACCOUNT_STATE, client.getClientName() );
         } catch(DataAccessException ex){
             log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "account state",  "clientId: ", clientId,
                     ex.getMessage()));
@@ -118,6 +128,18 @@ public class AccountsService implements AccountsFacade {
         }
 
         return account;
+    }
+
+    private Client existsClient(Long clientId) throws AccountException, ClientFeingException {
+        Client client = clientsPortRepository.getClientById(clientId);
+
+        if(Objects.isNull(client.getClientName())  || Objects.equals(client.getClientName(), "")) {
+            log.error(String.format(MSG_ERROR_PROCESS_SERVICE, "exists",  "clientId: ", clientId,
+                    "client not found"));
+            throw new AccountException("422-17", "client not found");
+        }
+
+        return client;
     }
 
     private Account validAccountBeforeCreate(Account accountToCreate) throws AccountException {

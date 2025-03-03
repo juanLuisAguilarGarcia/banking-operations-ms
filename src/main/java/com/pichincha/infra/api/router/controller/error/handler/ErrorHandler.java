@@ -1,5 +1,6 @@
 package com.pichincha.infra.api.router.controller.error.handler;
 
+import com.pichincha.infra.adapter.http.exception.ClientFeingException;
 import com.pichincha.infra.api.router.controller.dto.GenericResponseDTO;
 import com.pichincha.infra.api.router.controller.error.ErrorConsts;
 import com.pichincha.app.exception.AccountException;
@@ -51,6 +52,17 @@ public class ErrorHandler {
         );
 
         return new ResponseEntity<>(errorMesage, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler({ClientFeingException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ResponseEntity<GenericResponseDTO> feignException(BankingOperationsException ex ){
+        GenericResponseDTO errorMesage = new GenericResponseDTO(
+                ex.getCode(),
+                ex.getMessage()
+        );
+
+        return new ResponseEntity<>(errorMesage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
