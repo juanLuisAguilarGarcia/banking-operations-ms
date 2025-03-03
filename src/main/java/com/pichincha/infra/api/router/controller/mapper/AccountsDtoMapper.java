@@ -3,8 +3,10 @@ package com.pichincha.infra.api.router.controller.mapper;
 import com.pichincha.domain.entities.Account;
 import com.pichincha.domain.entities.AccountType;
 import com.pichincha.infra.api.router.controller.dto.request.CreateAccountDto;
+import com.pichincha.infra.api.router.controller.dto.request.UpdateMovementDto;
 import org.mapstruct.Mapper;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Mapper(componentModel = "spring")

@@ -12,8 +12,10 @@ public class RouterConsts {
      * Controller config
      */
     public static final String API_ACCOUNTS = "Accounts";
+    public static final String API_MOVEMENTS = "Movements";
     public static final String CROSS_ORIGIN = "*";
-    public static final String CONTROLLER_ACCOUNTS_PATH = "/accounts";
+    public static final String CONTROLLER_ACCOUNTS_PATH = "/account";
+    public static final String CONTROLLER_MOVEMENTS_PATH = "/movement";
 
     /**
      * operaciones o metodos
@@ -23,14 +25,23 @@ public class RouterConsts {
     public static final String API_OPERATION_DELETE_ACCOUNT = "Delete account information";
     public static final String API_OPERATION_UPDATE_ACCOUNT = "Update account information";
 
+    public static final String API_OPERATION_CREATE_MOVEMENT = "Create a new movement";
+    public static final String API_OPERATION_GET_MOVEMENT_BY_ID = "Get movement information by id ";
+    public static final String API_OPERATION_DELETE_MOVEMENT = "Delete movement information";
+    public static final String API_OPERATION_UPDATE_MOVEMENT = "Update movement information";
+
     /**
      * descripcion de las operaciones o metodos
      */
     public static final String NOTE_API_OPERATION_CREATE_ACCOUNT = "In charge of create a new account.";
     public static final String NOTE_API_OPERATION_GET_BY_ID_ACCOUNT = "In charge of get account information filter by Id.";
     public static final String NOTE_API_OPERATION_DELETE_ACCOUNT = "In charge of delete a account.";
-    public static final String NOTE_API_OPERATION_UPDATE_ACCOUNT = "In charge of update account infromation.";
+    public static final String NOTE_API_OPERATION_UPDATE_ACCOUNT = "In charge of update account information.";
 
+    public static final String NOTE_API_OPERATION_CREATE_MOVEMENT = "In charge of create a new movement.";
+    public static final String NOTE_API_OPERATION_GET_BY_ID_MOVEMENT = "In charge of get movement information filter by Id.";
+    public static final String NOTE_API_OPERATION_DELETE_MOVEMENT = "In charge of delete a movement.";
+    public static final String NOTE_API_OPERATION_UPDATE_MOVEMENT = "In charge of update movement information.";
     /**
      * mensajes de respuesta de acuerdo al codigo http
      */
@@ -44,6 +55,7 @@ public class RouterConsts {
      * params
      */
     public static final String PARAM_ACCOUNT_ID = "account_id";
+    public static final String PARAM_MOVEMENT_ID = "movement_id";
 
     /**
      * swagger param
@@ -52,9 +64,14 @@ public class RouterConsts {
     public static final String API_PARAM_REQUEST_UPDATE_ACCOUNT = "Body update mapped to CreateAccountDto.";
     public static final String API_PARAM_REQUEST_GET_ACCOUNT = "Id of account.";
 
+    public static final String API_PARAM_REQUEST_CREATE_MOVEMENT = "Body mapped to CreateAccountDto.";
+    public static final String API_PARAM_REQUEST_UPDATE_MOVEMENT = "Body update mapped to CreateAccountDto.";
+    public static final String API_PARAM_REQUEST_GET_MOVEMENT = "Id of movement.";
+
     /**
      * messages
      */
     public static final String MSG_CONFIRMATION_DELETE = "Record deleted successful.";
     public static final String MSG_PROCESS_ACCOUNT = "%s %s account: %s.";
+    public static final String MSG_PROCESS_MOVEMENT = "%s %s movement: %s.";
 }

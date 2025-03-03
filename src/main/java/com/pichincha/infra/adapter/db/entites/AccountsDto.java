@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +29,9 @@ public class AccountsDto {
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_type_id", referencedColumnName = "account_type_id")
     private AccountTypeDto accountType;
+
+    @OneToMany(mappedBy= "account")
+    private List<MovementsDto> movements;
 
     @Column(name = "init_amount")
     private BigDecimal initAmount;
